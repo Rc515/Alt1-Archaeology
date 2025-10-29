@@ -1,9 +1,16 @@
 {
-  "appName": "Archaeology Artefacts Tracker",
-  "appUrl": "index.html",
-  "iconUrl": "icon.png",
+  "appName": "Archaeology Tracker",
   "description": "Tracks damaged archaeology artefacts and XP.",
-  "version": "1.0.0",
-  "developer": "Your Name",
-  "permissions": ["overlay", "internal"]
+  "appUrl": "./index.html",
+  "configUrl": "./appconfig.json",
+  "iconUrl": "./icon.png",
+  "defaultWidth": 300,
+  "defaultHeight": 200,
+  "minWidth":300,
+  "minHeight":200,
+  "maxWidth":500,
+  "maxHeight":400,
+  "requestHandlers": [],
+  "activators": [],
+  "permissions": "overlay"
 }
