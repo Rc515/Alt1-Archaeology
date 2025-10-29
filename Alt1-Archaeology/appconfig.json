@@ -1,9 +1,0 @@
-{
-  "appName": "Archaeology Artefacts Tracker",
-  "appUrl": "index.html",
-  "iconUrl": "icon.png",
-  "description": "Tracks damaged archaeology artefacts and XP.",
-  "version": "1.0.0",
-  "developer": "Your Name",
-  "permissions": ["overlay", "internal"]
-}
