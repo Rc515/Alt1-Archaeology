@@ -1,19 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Archaeology Damaged Artefacts</title>
+    <meta charset="UTF-8">
+    <title>Archaeology Tracker</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <h1>Archaeology Damaged Artefacts</h1>
-  <button id="fetchBtn">Fetch Damaged Artefacts</button>
-  <div id="results"></div>
+    <h1>Archaeology Tracker</h1>
+    
+    <div class="container" id="artefact-list">
+        <!-- Example cards, will be dynamically generated later -->
+        <div class="card">
+            <div class="card-header">
+                <img src="./icon.png" class="artefact-icon" alt="Icon">
+                <span class="artefact-name">Broken Sword</span>
+            </div>
+            <div class="card-body">
+                <span class="artefact-xp">XP: 1200</span>
+                <span class="artefact-quantity">Qty: 3</span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <img src="./icon.png" class="artefact-icon" alt="Icon">
+                <span class="artefact-name">Ancient Vase</span>
+            </div>
+            <div class="card-body">
+                <span class="artefact-xp">XP: 800</span>
+                <span class="artefact-quantity">Qty: 5</span>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    document.getElementById('fetchBtn').addEventListener('click', () => {
-      document.getElementById('results').innerText = 'Fetching...';
-      // Your fetching code here
-    });
-  </script>
+    <!-- JS goes here later if you want dynamic functionality -->
 </body>
 </html>
