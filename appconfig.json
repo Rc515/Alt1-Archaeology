@@ -12,5 +12,5 @@
   "maxHeight": 300,
   "requestHandlers": [],
   "activators": [],
-  "permissions": "pixel,gamestate,overlay,internal"
+  "permissions": "pixel,gamestate,overlay"
 }
