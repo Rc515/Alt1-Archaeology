@@ -10,5 +10,6 @@
   "minHeight": 200,
   "requestHandlers": [],
   "activators": [],
-  "permissions": "pixel,gamestate,overlay"
+  "permissions": "pixel,gamestate,overlay,internal"
 }
+
