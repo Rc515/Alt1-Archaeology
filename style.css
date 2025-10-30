@@ -69,3 +69,16 @@ h1 {
 .artefact-quantity {
     color: #ff6666;
 }
+
+.scan-btn {
+    background-color: #00ffcc;
+    border: none;
+    color: #1e1e1e;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.scan-btn:hover {
+    background-color: #00cfa0;
+}
