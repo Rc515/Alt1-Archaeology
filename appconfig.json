@@ -4,13 +4,11 @@
   "appUrl": "./index.html",
   "configUrl": "./appconfig.json",
   "iconUrl": "./icon.png",
-  "defaultWidth": 300,
-  "defaultHeight": 200,
+  "defaultWidth": 400,
+  "defaultHeight": 300,
   "minWidth": 300,
   "minHeight": 200,
-  "maxWidth": 500,
-  "maxHeight": 400,
   "requestHandlers": [],
   "activators": [],
-  "permissions": ["overlay", "internal", "capture"]
+  "permissions": "pixel,gamestate,overlay"
 }
