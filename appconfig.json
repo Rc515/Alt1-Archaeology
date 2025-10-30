@@ -6,11 +6,11 @@
   "iconUrl": "./icon.png",
   "defaultWidth": 300,
   "defaultHeight": 200,
-  "minWidth":300,
-  "minHeight":200,
-  "maxWidth":500,
-  "maxHeight":400,
+  "minWidth": 300,
+  "minHeight": 200,
+  "maxWidth": 500,
+  "maxHeight": 400,
   "requestHandlers": [],
   "activators": [],
-  "permissions": "overlay"
+  "permissions": ["overlay", "internal", "capture"]
 }
