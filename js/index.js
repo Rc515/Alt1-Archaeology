@@ -18,7 +18,7 @@ window.addEventListener("load", () => {
   scanBtn.addEventListener("click", () => {
     try {
       // Capture current RuneScape screen
-      const img = alt1.captureHoldFullRs();
+      const img = alt1.capture();
 
       if (!img) {
         status.innerText = "❌ Capture failed — make sure RuneScape is visible.";
