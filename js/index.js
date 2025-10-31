@@ -30,36 +30,42 @@ window.addEventListener("load", () => {
     statusDiv.innerHTML = `🧩 Loaded test image (${img.width}x${img.height})`;
   }
 
-  // Show a real capture (Alt1 mode)
-function captureAlt1() {
-  const capture = a1lib.captureHoldFullRs();
-  if (!capture) throw new Error("No capture data from Alt1.");
+  // --- Capture in Alt1 mode ---
+  function captureAlt1() {
+    const capture = a1lib.captureHoldFullRs();
+    if (!capture) throw new Error("No capture data from Alt1.");
 
-  console.log("Alt1 capture object:", capture);
+    console.log("🧩 Alt1 capture object:", capture);
 
-  // Detect which field actually has image data
-  const buf = capture.raw || capture.data || capture.img || null;
-  if (!buf) throw new Error("No raw image buffer in capture.");
+    // ✅ If Alt1 already returns a valid ImageData (your case)
+    if (capture instanceof ImageData) {
+      canvas.width = capture.width;
+      canvas.height = capture.height;
+      ctx.putImageData(capture, 0, 0);
+      statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
+      return;
+    }
 
-  console.log("Buffer length:", buf.length, "bytes");
+    // 🧩 Otherwise handle raw/legacy capture format
+    const buf = capture.raw || capture.data || capture.img || null;
+    if (!buf) throw new Error("No raw image buffer found in capture.");
 
-  // Create ImageData safely
-  const imgData = new ImageData(
-    new Uint8ClampedArray(buf),
-    capture.width,
-    capture.height
-  );
+    console.log("📦 Buffer length:", buf.length, "bytes");
 
-  canvas.width = capture.width;
-  canvas.height = capture.height;
-  ctx.putImageData(imgData, 0, 0);
+    const imgData = new ImageData(
+      new Uint8ClampedArray(buf),
+      capture.width,
+      capture.height
+    );
 
-  statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
-}
+    canvas.width = capture.width;
+    canvas.height = capture.height;
+    ctx.putImageData(imgData, 0, 0);
 
+    statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
+  }
 
-
-  // Button click
+  // --- Button click ---
   scanBtn.onclick = async () => {
     try {
       if (inAlt1) {
