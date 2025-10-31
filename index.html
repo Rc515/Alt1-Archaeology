@@ -38,9 +38,8 @@
   </div>
 
   <!-- Load Alt1 library -->
-  <script src="https://runescape.alt1.app/static/js/alt1lib.js"></script>
-
-  <!-- Then load your app's code -->
-  <script src="./js/index.js"></script>
+  <!-- Load Alt1 capture library before your script -->
+  <script src="https://runescape.alt1.app/static/js/alt1lib.js" defer></script>
+  <script src="./js/index.js" defer></script>
 </body>
 </html>
