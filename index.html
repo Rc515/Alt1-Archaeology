@@ -9,7 +9,7 @@
     <h1>Archaeology Tracker</h1>
     
     <div class="container" id="artefact-list">
-        <!-- Example cards, will be dynamically generated later -->
+        <!-- Example cards -->
         <div class="card">
             <div class="card-header">
                 <img src="./icon.png" class="artefact-icon" alt="Icon">
@@ -32,11 +32,34 @@
         </div>
     </div>
 
-    <!-- JS goes here later if you want dynamic functionality -->
-	    <!-- JS goes here later if you want dynamic functionality -->
-<script>
-alert("Inline JS test running...");
-</script>
-<script src="./js/index.js"></script>
+    <!-- Embedded JavaScript for Alt1 -->
+    <script>
+    // index.js — Alt1 Archaeology Tracker test
+    // This file just confirms Alt1 can load and run JavaScript
+
+    window.addEventListener("load", () => {
+        // Detect if the app is actually inside Alt1
+        if (!window.alt1) {
+            alert("Alt1 not detected — open this inside the Alt1 Toolkit.");
+            return;
+        }
+
+        // Identify the app to Alt1
+        alt1.identifyAppUrl("./appconfig.json");
+
+        // Confirm everything loaded
+        console.log("Archaeology Tracker loaded successfully!");
+        alert("Archaeology Tracker loaded successfully!");
+
+        // Add a simple button to test events
+        const btn = document.createElement("button");
+        btn.textContent = "Click to test JavaScript!";
+        btn.style.padding = "10px";
+        btn.style.marginTop = "20px";
+        btn.style.fontWeight = "bold";
+        btn.onclick = () => alert("Button click works!");
+        document.body.appendChild(btn);
+    });
+    </script>
 </body>
 </html>
