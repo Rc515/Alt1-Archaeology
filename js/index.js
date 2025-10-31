@@ -1,5 +1,5 @@
-// Alt1 Archaeology Tracker — Full Capture Test Version
-// Works even when a1lib loads slowly
+// Alt1 Archaeology Tracker — Full Capture Test Version (working)
+// Includes fallback and visual preview of RuneScape capture
 
 window.addEventListener("load", () => {
   const status = document.getElementById("status");
@@ -37,8 +37,14 @@ window.addEventListener("load", () => {
         status.innerText = "⏳ Attempting capture...";
         console.log("Attempting capture...");
 
-        // Attempt to capture RuneScape screen
-        const img = a1lib.captureHoldFullRs();
+        let img = null;
+
+        // Try full RuneScape capture first
+        if (a1lib && typeof a1lib.captureHoldFullRs === "function") {
+          img = a1lib.captureHoldFullRs();
+        } else if (a1lib && typeof a1lib.capture === "function") {
+          img = a1lib.capture();
+        }
 
         if (!img || !img.width) {
           status.innerText = "❌ Capture failed — RuneScape not visible or invalid image.";
@@ -59,6 +65,11 @@ window.addEventListener("load", () => {
         canvas.style.width = "250px";
         canvas.style.border = "1px solid #555";
         canvas.style.marginTop = "10px";
+
+        // Remove any previous preview
+        const oldCanvas = document.querySelector("#controls canvas");
+        if (oldCanvas) oldCanvas.remove();
+
         document.getElementById("controls").appendChild(canvas);
       } catch (err) {
         console.error("Capture error:", err);
