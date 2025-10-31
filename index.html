@@ -1,74 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Archaeology Tracker</title>
-    <link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8">
+  <title>Archaeology Tracker</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <h1>Archaeology Tracker</h1>
-    
-    <div class="container" id="artefact-list">
-        <!-- Example cards -->
-        <div class="card">
-            <div class="card-header">
-                <img src="./icon.png" class="artefact-icon" alt="Icon">
-                <span class="artefact-name">Broken Sword</span>
-            </div>
-            <div class="card-body">
-                <span class="artefact-xp">XP: 1200</span>
-                <span class="artefact-quantity">Qty: 3</span>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <img src="./icon.png" class="artefact-icon" alt="Icon">
-                <span class="artefact-name">Ancient Vase</span>
-            </div>
-            <div class="card-body">
-                <span class="artefact-xp">XP: 800</span>
-                <span class="artefact-quantity">Qty: 5</span>
-            </div>
-        </div>
+  <h1>Archaeology Tracker</h1>
+
+  <div class="container" id="artefact-list">
+    <div class="card">
+      <div class="card-header">
+        <img src="./icon.png" class="artefact-icon" alt="Icon">
+        <span class="artefact-name">Broken Sword</span>
+      </div>
+      <div class="card-body">
+        <span class="artefact-xp">XP: 1200</span>
+        <span class="artefact-quantity">Qty: 3</span>
+      </div>
     </div>
+    <div class="card">
+      <div class="card-header">
+        <img src="./icon.png" class="artefact-icon" alt="Icon">
+        <span class="artefact-name">Ancient Vase</span>
+      </div>
+      <div class="card-body">
+        <span class="artefact-xp">XP: 800</span>
+        <span class="artefact-quantity">Qty: 5</span>
+      </div>
+    </div>
+  </div>
 
-    <!-- Embedded JavaScript for Alt1 -->
-    <script>
-window.addEventListener("load", () => {
-    if (!window.alt1) {
-        const msg = document.createElement("div");
-        msg.textContent = "Alt1 not detected — open this inside Alt1 Toolkit.";
-        msg.style.color = "red";
-        msg.style.fontWeight = "bold";
-        document.body.prepend(msg);
-        return;
-    }
+  <!-- Add capture controls -->
+  <div id="controls" style="margin-top: 15px; text-align: center;">
+    <button id="scanBtn">📸 Scan Bank Tab</button>
+    <div id="status" style="margin-top:10px; color:#ffcc00;">Waiting...</div>
+  </div>
 
-    alt1.identifyAppUrl("./appconfig.json");
-
-    // Visible message instead of alert
-    const loaded = document.createElement("div");
-    loaded.textContent = "✅ Archaeology Tracker loaded successfully!";
-    loaded.style.color = "#00ffcc";
-    loaded.style.fontWeight = "bold";
-    loaded.style.marginBottom = "10px";
-    document.body.prepend(loaded);
-
-    // Test button
-    const btn = document.createElement("button");
-    btn.textContent = "Click to test JavaScript!";
-    btn.style.padding = "10px";
-    btn.style.marginTop = "10px";
-    btn.style.fontWeight = "bold";
-    btn.onclick = () => {
-        const clicked = document.createElement("div");
-        clicked.textContent = "Button click works!";
-        clicked.style.color = "#ffcc00";
-        document.body.appendChild(clicked);
-    };
-    document.body.appendChild(btn);
-});
-</script>
-
+  <script src="./index.js"></script>
 </body>
 </html>
