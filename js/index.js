@@ -10,17 +10,14 @@ window.addEventListener("load", () => {
   alt1.identifyAppUrl("./appconfig.json");
   status.innerText = "✅ Alt1 environment detected.";
 
-  // Wait until a1lib loads
   function waitForLib() {
     if (typeof window.a1lib === "undefined") {
+      console.log("Waiting for a1lib...");
       status.innerText = "⌛ Loading Alt1 capture library...";
-      console.log("Waiting for Alt1 capture library...");
-      setTimeout(waitForLib, 500);
+      setTimeout(waitForLib, 300);
       return;
     }
-
     status.innerText = "✅ Alt1 + a1lib loaded successfully.";
-    console.log("Alt1 + a1lib ready.");
     initCapture();
   }
 
@@ -30,32 +27,22 @@ window.addEventListener("load", () => {
     scanBtn.addEventListener("click", () => {
       try {
         status.innerText = "⏳ Attempting capture...";
-        console.log("Scan button clicked — attempting capture...");
+        console.log("Attempting capture...");
 
         let img = null;
-
-        if (window.a1lib && typeof a1lib.captureHoldFullRs === "function") {
-          console.log("Using captureHoldFullRs()");
+        if (a1lib && typeof a1lib.captureHoldFullRs === "function") {
           img = a1lib.captureHoldFullRs();
-        } else if (window.a1lib && typeof a1lib.capture === "function") {
-          console.log("Using capture()");
+        } else if (a1lib && typeof a1lib.capture === "function") {
           img = a1lib.capture();
-        } else {
-          console.warn("No capture function available on a1lib.");
-          status.innerText = "⚠️ No capture function detected (a1lib incomplete).";
-          return;
         }
 
         if (!img || !img.width) {
-          console.warn("No image data returned from capture.");
-          status.innerText = "❌ Capture failed — RuneScape not visible or not linked.";
+          status.innerText = "❌ Capture failed — RuneScape not visible or invalid image.";
           return;
         }
 
-        status.innerText = `✅ Capture success (${img.width}x${img.height})`;
-        console.log(`Capture success: ${img.width}x${img.height}`);
+        status.innerText = `✅ Capture success (${img.width}x${img.height}px)`;
 
-        // Show captured image preview
         const canvas = document.createElement("canvas");
         canvas.width = img.width;
         canvas.height = img.height;
@@ -63,9 +50,10 @@ window.addEventListener("load", () => {
         ctx.putImageData(img, 0, 0);
         canvas.style.width = "250px";
         canvas.style.marginTop = "10px";
+        canvas.style.border = "1px solid #555";
         document.getElementById("controls").appendChild(canvas);
       } catch (err) {
-        console.error("Capture error:", err);
+        console.error(err);
         status.innerText = "⚠️ Error: " + err.message;
       }
     });
