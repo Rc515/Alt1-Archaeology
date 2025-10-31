@@ -32,27 +32,31 @@ window.addEventListener("load", () => {
 
   // Show a real capture (Alt1 mode)
 function captureAlt1() {
-  // Capture from RuneScape window
   const capture = a1lib.captureHoldFullRs();
+  if (!capture) throw new Error("No capture data from Alt1.");
 
-  if (!capture || !capture.raw) {
-    throw new Error("Failed to get Alt1 capture data — ensure RS is visible.");
-  }
+  console.log("Alt1 capture object:", capture);
 
-  // Convert the raw image buffer to ImageData manually
+  // Detect which field actually has image data
+  const buf = capture.raw || capture.data || capture.img || null;
+  if (!buf) throw new Error("No raw image buffer in capture.");
+
+  console.log("Buffer length:", buf.length, "bytes");
+
+  // Create ImageData safely
   const imgData = new ImageData(
-    new Uint8ClampedArray(capture.raw),
+    new Uint8ClampedArray(buf),
     capture.width,
     capture.height
   );
 
-  // Draw to canvas
   canvas.width = capture.width;
   canvas.height = capture.height;
   ctx.putImageData(imgData, 0, 0);
 
   statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
 }
+
 
 
   // Button click
