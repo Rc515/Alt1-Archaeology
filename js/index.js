@@ -31,39 +31,44 @@ window.addEventListener("load", () => {
   }
 
   // --- Capture in Alt1 mode ---
-  function captureAlt1() {
-    const capture = a1lib.captureHoldFullRs();
-    if (!capture) throw new Error("No capture data from Alt1.");
+function captureAlt1() {
+  const capture = a1lib.captureHoldFullRs();
+  if (!capture) throw new Error("No capture data from Alt1.");
 
-    console.log("🧩 Alt1 capture object:", capture);
+  console.log("🧩 Alt1 capture object:", capture);
 
-    // ✅ If Alt1 already returns a valid ImageData (your case)
-    if (capture instanceof ImageData) {
-      canvas.width = capture.width;
-      canvas.height = capture.height;
-      ctx.putImageData(capture, 0, 0);
-      statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
-      return;
-    }
+  let imgData;
 
-    // 🧩 Otherwise handle raw/legacy capture format
+  // ✅ If already ImageData, convert its channels
+  if (capture instanceof ImageData) {
+    imgData = capture;
+  } else {
     const buf = capture.raw || capture.data || capture.img || null;
     if (!buf) throw new Error("No raw image buffer found in capture.");
 
     console.log("📦 Buffer length:", buf.length, "bytes");
-
-    const imgData = new ImageData(
+    imgData = new ImageData(
       new Uint8ClampedArray(buf),
       capture.width,
       capture.height
     );
-
-    canvas.width = capture.width;
-    canvas.height = capture.height;
-    ctx.putImageData(imgData, 0, 0);
-
-    statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
   }
+
+  // 🧠 Convert BGRA → RGBA
+  const data = imgData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const b = data[i];
+    const r = data[i + 2];
+    data[i] = r;
+    data[i + 2] = b;
+  }
+
+  canvas.width = imgData.width;
+  canvas.height = imgData.height;
+  ctx.putImageData(imgData, 0, 0);
+
+  statusDiv.innerHTML = `✅ Capture success (${imgData.width}x${imgData.height})`;
+}
 
   // --- Button click ---
   scanBtn.onclick = async () => {
