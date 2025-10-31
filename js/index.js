@@ -1,61 +1,52 @@
 window.addEventListener("load", () => {
-  const status = document.getElementById("status");
   const scanBtn = document.getElementById("scanBtn");
+  const statusDiv = document.getElementById("status");
 
-  if (!window.alt1) {
-    status.innerText = "⚠️ Alt1 not detected — open this inside Alt1 Toolkit.";
-    return;
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+  canvas.style.margin = "10px auto";
+  document.body.appendChild(canvas);
+
+  const inAlt1 = typeof window.alt1 !== "undefined";
+
+  if (inAlt1) {
+    statusDiv.innerHTML = "✅ Alt1 environment detected.";
+  } else {
+    statusDiv.innerHTML = "🧩 Browser mode — using test image.";
   }
 
-  alt1.identifyAppUrl("./appconfig.json");
-  status.innerText = "✅ Alt1 environment detected.";
-
-  function waitForLib() {
-    if (typeof window.a1lib === "undefined") {
-      console.log("Waiting for a1lib...");
-      status.innerText = "⌛ Loading Alt1 capture library...";
-      setTimeout(waitForLib, 300);
-      return;
-    }
-    status.innerText = "✅ Alt1 + a1lib loaded successfully.";
-    initCapture();
+  async function showImage(imgData) {
+    canvas.width = imgData.width;
+    canvas.height = imgData.height;
+    ctx.putImageData(imgData, 0, 0);
   }
 
-  waitForLib();
+  async function loadTestImage() {
+    const img = new Image();
+    img.src = "./assets/test_bank.png";
+    await img.decode();
 
-  function initCapture() {
-    scanBtn.addEventListener("click", () => {
-      try {
-        status.innerText = "⏳ Attempting capture...";
-        console.log("Attempting capture...");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    statusDiv.innerHTML = "🧩 Loaded test bank image.";
+  }
 
-        let img = null;
-        if (a1lib && typeof a1lib.captureHoldFullRs === "function") {
-          img = a1lib.captureHoldFullRs();
-        } else if (a1lib && typeof a1lib.capture === "function") {
-          img = a1lib.capture();
-        }
+  scanBtn.onclick = async () => {
+    statusDiv.innerHTML = "⏳ Scanning...";
 
-        if (!img || !img.width) {
-          status.innerText = "❌ Capture failed — RuneScape not visible or invalid image.";
-          return;
-        }
-
-        status.innerText = `✅ Capture success (${img.width}x${img.height}px)`;
-
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        ctx.putImageData(img, 0, 0);
-        canvas.style.width = "250px";
-        canvas.style.marginTop = "10px";
-        canvas.style.border = "1px solid #555";
-        document.getElementById("controls").appendChild(canvas);
-      } catch (err) {
-        console.error(err);
-        status.innerText = "⚠️ Error: " + err.message;
+    try {
+      if (inAlt1) {
+        const imgData = a1lib.captureHoldFullRs();
+        await showImage(imgData);
+        statusDiv.innerHTML = `✅ Capture success (${imgData.width}x${imgData.height})`;
+      } else {
+        await loadTestImage();
       }
-    });
-  }
+    } catch (e) {
+      console.error(e);
+      statusDiv.innerHTML = `⚠️ Error: ${e.message}`;
+    }
+  };
 });
