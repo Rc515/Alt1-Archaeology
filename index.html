@@ -34,32 +34,41 @@
 
     <!-- Embedded JavaScript for Alt1 -->
     <script>
-    // index.js — Alt1 Archaeology Tracker test
-    // This file just confirms Alt1 can load and run JavaScript
+window.addEventListener("load", () => {
+    if (!window.alt1) {
+        const msg = document.createElement("div");
+        msg.textContent = "Alt1 not detected — open this inside Alt1 Toolkit.";
+        msg.style.color = "red";
+        msg.style.fontWeight = "bold";
+        document.body.prepend(msg);
+        return;
+    }
 
-    window.addEventListener("load", () => {
-        // Detect if the app is actually inside Alt1
-        if (!window.alt1) {
-            alert("Alt1 not detected — open this inside the Alt1 Toolkit.");
-            return;
-        }
+    alt1.identifyAppUrl("./appconfig.json");
 
-        // Identify the app to Alt1
-        alt1.identifyAppUrl("./appconfig.json");
+    // Visible message instead of alert
+    const loaded = document.createElement("div");
+    loaded.textContent = "✅ Archaeology Tracker loaded successfully!";
+    loaded.style.color = "#00ffcc";
+    loaded.style.fontWeight = "bold";
+    loaded.style.marginBottom = "10px";
+    document.body.prepend(loaded);
 
-        // Confirm everything loaded
-        console.log("Archaeology Tracker loaded successfully!");
-        alert("Archaeology Tracker loaded successfully!");
+    // Test button
+    const btn = document.createElement("button");
+    btn.textContent = "Click to test JavaScript!";
+    btn.style.padding = "10px";
+    btn.style.marginTop = "10px";
+    btn.style.fontWeight = "bold";
+    btn.onclick = () => {
+        const clicked = document.createElement("div");
+        clicked.textContent = "Button click works!";
+        clicked.style.color = "#ffcc00";
+        document.body.appendChild(clicked);
+    };
+    document.body.appendChild(btn);
+});
+</script>
 
-        // Add a simple button to test events
-        const btn = document.createElement("button");
-        btn.textContent = "Click to test JavaScript!";
-        btn.style.padding = "10px";
-        btn.style.marginTop = "20px";
-        btn.style.fontWeight = "bold";
-        btn.onclick = () => alert("Button click works!");
-        document.body.appendChild(btn);
-    });
-    </script>
 </body>
 </html>
