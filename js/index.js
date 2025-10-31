@@ -2,51 +2,55 @@ window.addEventListener("load", () => {
   const scanBtn = document.getElementById("scanBtn");
   const statusDiv = document.getElementById("status");
 
+  // Create and attach a canvas for showing images
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   canvas.style.display = "block";
   canvas.style.margin = "10px auto";
   document.body.appendChild(canvas);
 
-  const inAlt1 = typeof window.alt1 !== "undefined";
+  // Detect if Alt1 is running
+  const inAlt1 = typeof window.alt1 !== "undefined" && alt1.version;
 
   if (inAlt1) {
     statusDiv.innerHTML = "✅ Alt1 environment detected.";
   } else {
-    statusDiv.innerHTML = "🧩 Browser mode — using test image.";
+    statusDiv.innerHTML = "🧩 Browser mode — will use test image.";
   }
 
-  async function showImage(imgData) {
-    canvas.width = imgData.width;
-    canvas.height = imgData.height;
-    ctx.putImageData(imgData, 0, 0);
-  }
-
+  // Load a static test image (for Chrome / GitHub mode)
   async function loadTestImage() {
     const img = new Image();
-    img.src = "./assets/test_bank.png";
+    img.src = "./assets/test_bank.png"; // Make sure this file exists!
     await img.decode();
 
     canvas.width = img.width;
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
-    statusDiv.innerHTML = "🧩 Loaded test bank image.";
+    statusDiv.innerHTML = `🧩 Loaded test image (${img.width}x${img.height})`;
   }
 
-  scanBtn.onclick = async () => {
-    statusDiv.innerHTML = "⏳ Scanning...";
+  // Show a real capture (Alt1 mode)
+  function captureAlt1() {
+    const capture = a1lib.captureHoldFullRs();
+    if (!capture) throw new Error("No capture data from Alt1.");
+    canvas.width = capture.width;
+    canvas.height = capture.height;
+    ctx.putImageData(capture, 0, 0);
+    statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
+  }
 
+  // Button click
+  scanBtn.onclick = async () => {
     try {
       if (inAlt1) {
-        const imgData = a1lib.captureHoldFullRs();
-        await showImage(imgData);
-        statusDiv.innerHTML = `✅ Capture success (${imgData.width}x${imgData.height})`;
+        captureAlt1();
       } else {
         await loadTestImage();
       }
-    } catch (e) {
-      console.error(e);
-      statusDiv.innerHTML = `⚠️ Error: ${e.message}`;
+    } catch (err) {
+      console.error(err);
+      statusDiv.innerHTML = `⚠️ ${err.message}`;
     }
   };
 });
