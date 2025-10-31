@@ -31,14 +31,23 @@ window.addEventListener("load", () => {
   }
 
   // Show a real capture (Alt1 mode)
-  function captureAlt1() {
-    const capture = a1lib.captureHoldFullRs();
-    if (!capture) throw new Error("No capture data from Alt1.");
-    canvas.width = capture.width;
-    canvas.height = capture.height;
-    ctx.putImageData(capture, 0, 0);
-    statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
-  }
+function captureAlt1() {
+  const capture = a1lib.captureHoldFullRs();
+  if (!capture) throw new Error("No capture data from Alt1.");
+
+  // Convert raw capture to ImageData
+  const imgData = new ImageData(
+    new Uint8ClampedArray(capture.data),
+    capture.width,
+    capture.height
+  );
+
+  canvas.width = capture.width;
+  canvas.height = capture.height;
+  ctx.putImageData(imgData, 0, 0);
+
+  statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
+}
 
   // Button click
   scanBtn.onclick = async () => {
