@@ -32,22 +32,28 @@ window.addEventListener("load", () => {
 
   // Show a real capture (Alt1 mode)
 function captureAlt1() {
+  // Capture from RuneScape window
   const capture = a1lib.captureHoldFullRs();
-  if (!capture) throw new Error("No capture data from Alt1.");
 
-  // Convert raw capture to ImageData
+  if (!capture || !capture.raw) {
+    throw new Error("Failed to get Alt1 capture data — ensure RS is visible.");
+  }
+
+  // Convert the raw image buffer to ImageData manually
   const imgData = new ImageData(
-    new Uint8ClampedArray(capture.data),
+    new Uint8ClampedArray(capture.raw),
     capture.width,
     capture.height
   );
 
+  // Draw to canvas
   canvas.width = capture.width;
   canvas.height = capture.height;
   ctx.putImageData(imgData, 0, 0);
 
   statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
 }
+
 
   // Button click
   scanBtn.onclick = async () => {
