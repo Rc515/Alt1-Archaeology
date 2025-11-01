@@ -1,16 +1,15 @@
 {
   "appName": "Archaeology Tracker",
   "description": "Tracks damaged archaeology artefacts and XP.",
-  "appUrl": "./index.html",
-  "configUrl": "./appconfig.json",
-  "iconUrl": "./icon.png",
+  "appUrl": "https://rc515.github.io/Alt1-Archaeology/index.html",
+  "configUrl": "https://rc515.github.io/Alt1-Archaeology/appconfig.json",
+  "iconUrl": "https://rc515.github.io/Alt1-Archaeology/icon.png",
   "defaultWidth": 400,
   "defaultHeight": 300,
   "minWidth": 300,
   "minHeight": 200,
-  "maxWidth": 400,
-  "maxHeight": 300,
-  "requestHandlers": [],
-  "activators": [],
-  "permissions": "pixel,gamestate,overlay"
+  "maxWidth": 800,
+  "maxHeight": 600,
+  "permissions": "pixel,gamestate,overlay",
+  "captureMethod": "DirectX"
 }
