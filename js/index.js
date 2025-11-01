@@ -31,46 +31,53 @@ window.addEventListener("load", () => {
   }
 
   // --- Capture in Alt1 mode ---
-function captureAlt1() {
-  const capture = a1lib.captureHoldFullRs();
-  if (!capture) throw new Error("No capture data from Alt1.");
+  function captureAlt1() {
+    const capture = a1lib.captureHoldFullRs();
+    if (!capture) throw new Error("No capture data from Alt1.");
 
-  console.log("🧩 Alt1 capture object:", capture);
+    console.log("🧩 Alt1 capture object:", capture);
 
-  let imgData;
+    // ✅ Official Alt1 rendering path
+    if (typeof capture.toCanvas === "function") {
+      console.log("✅ Using capture.toCanvas() to render directly");
+      capture.toCanvas(canvas);
+      statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
+      return;
+    }
 
-  // ✅ Preferred: official Alt1 capture conversion
-  if (typeof capture.toImageData === "function") {
-    imgData = capture.toImageData();
-    console.log("✅ Used capture.toImageData()");
-  } else if (capture instanceof ImageData) {
-    imgData = capture;
-    console.log("🧩 Using direct ImageData");
-  } else {
-    // Fallback for stubs / raw buffer
-    const buf = capture.raw || capture.data || capture.img || capture.buf8 || null;
-    if (!buf) throw new Error("No image buffer found in capture object.");
-    console.log("📦 Buffer length:", buf.length, "bytes");
-    imgData = new ImageData(new Uint8ClampedArray(buf), capture.width, capture.height);
+    let imgData;
+
+    // Try to convert via Alt1 helper if available
+    if (typeof capture.toImageData === "function") {
+      imgData = capture.toImageData();
+      console.log("✅ Used capture.toImageData()");
+    } else if (capture instanceof ImageData) {
+      imgData = capture;
+      console.log("🧩 Using direct ImageData");
+    } else {
+      // Fallback for stubs / raw buffer
+      const buf = capture.raw || capture.data || capture.img || capture.buf8 || null;
+      if (!buf) throw new Error("No image buffer found in capture object.");
+      console.log("📦 Buffer length:", buf.length, "bytes");
+      imgData = new ImageData(new Uint8ClampedArray(buf), capture.width, capture.height);
+    }
+
+    // Draw manually
+    canvas.width = imgData.width;
+    canvas.height = imgData.height;
+    ctx.putImageData(imgData, 0, 0);
+
+    // 🟩 Draw a green border + text overlay for debugging
+    ctx.strokeStyle = "lime";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(0, 0, imgData.width, imgData.height);
+
+    ctx.fillStyle = "lime";
+    ctx.font = "20px monospace";
+    ctx.fillText("Captured from RS", 10, 30);
+
+    statusDiv.innerHTML = `✅ Capture success (${imgData.width}x${imgData.height})`;
   }
-
-  // Draw the image
-  canvas.width = imgData.width;
-  canvas.height = imgData.height;
-  ctx.putImageData(imgData, 0, 0);
-
-  // 🟩 Draw a green border + text overlay for debugging
-  ctx.strokeStyle = "lime";
-  ctx.lineWidth = 4;
-  ctx.strokeRect(0, 0, imgData.width, imgData.height);
-
-  ctx.fillStyle = "lime";
-  ctx.font = "20px monospace";
-  ctx.fillText("Captured from RS", 10, 30);
-
-  statusDiv.innerHTML = `✅ Capture success (${imgData.width}x${imgData.height})`;
-}
-
 
   // --- Button click ---
   scanBtn.onclick = async () => {
