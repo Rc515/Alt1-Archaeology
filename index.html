@@ -35,7 +35,16 @@
     <div id="status" style="margin-top:10px; color:#ffcc00;">Waiting...</div>
   </div>
 
-  <!-- ✅ Only include your main script. Alt1 injects its own a1lib.js automatically -->
+  <!-- Load our stub ONLY when not inside Alt1 (so Alt1 can inject its real a1lib) -->
+  <script>
+    if (!window.alt1) {
+      var s = document.createElement('script');
+      s.src = './js/a1lib_stub.js';
+      document.head.appendChild(s);
+    }
+  </script>
+
+  <!-- Your app logic -->
   <script src="./js/index.js" defer></script>
 </body>
 </html>

@@ -10,18 +10,16 @@ window.addEventListener("load", () => {
   document.body.appendChild(canvas);
 
   // Detect if Alt1 is running
-  const inAlt1 = typeof window.alt1 !== "undefined" && alt1.version;
+  const inAlt1 = typeof window.alt1 !== "undefined" && !!window.alt1;
 
-  if (inAlt1) {
-    statusDiv.innerHTML = "✅ Alt1 environment detected.";
-  } else {
-    statusDiv.innerHTML = "🧩 Browser mode — will use test image.";
-  }
+  statusDiv.innerHTML = inAlt1
+    ? "✅ Alt1 environment detected."
+    : "🧩 Browser mode — will use test image.";
 
   // Load a static test image (for Chrome / GitHub mode)
   async function loadTestImage() {
     const img = new Image();
-    img.src = "./assets/test_bank.png"; // Make sure this file exists!
+    img.src = "./assets/test_bank.png"; // ensure file exists!
     await img.decode();
 
     canvas.width = img.width;
@@ -32,14 +30,17 @@ window.addEventListener("load", () => {
 
   // --- Capture in Alt1 mode ---
   function captureAlt1() {
+    if (!window.a1lib || !a1lib.captureHoldFullRs) {
+      throw new Error("a1lib not available (Alt1 did not inject).");
+    }
+
     const capture = a1lib.captureHoldFullRs();
     if (!capture) throw new Error("No capture data from Alt1.");
 
     console.log("🧩 Alt1 capture object:", capture);
 
-    // ✅ Official Alt1 rendering path
+    // Preferred draw path in Alt1 (some capture objects have this)
     if (typeof capture.toCanvas === "function") {
-      console.log("✅ Using capture.toCanvas() to render directly");
       capture.toCanvas(canvas);
       statusDiv.innerHTML = `✅ Capture success (${capture.width}x${capture.height})`;
       return;
@@ -47,7 +48,7 @@ window.addEventListener("load", () => {
 
     let imgData;
 
-    // Try to convert via Alt1 helper if available
+    // Some versions expose a helper
     if (typeof capture.toImageData === "function") {
       imgData = capture.toImageData();
       console.log("✅ Used capture.toImageData()");
@@ -55,7 +56,6 @@ window.addEventListener("load", () => {
       imgData = capture;
       console.log("🧩 Using direct ImageData");
     } else {
-      // Fallback for stubs / raw buffer
       const buf = capture.raw || capture.data || capture.img || capture.buf8 || null;
       if (!buf) throw new Error("No image buffer found in capture object.");
       console.log("📦 Buffer length:", buf.length, "bytes");
@@ -67,14 +67,13 @@ window.addEventListener("load", () => {
     canvas.height = imgData.height;
     ctx.putImageData(imgData, 0, 0);
 
-    // 🟩 Draw a green border + text overlay for debugging
+    // Debug frame
     ctx.strokeStyle = "lime";
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 3;
     ctx.strokeRect(0, 0, imgData.width, imgData.height);
-
     ctx.fillStyle = "lime";
-    ctx.font = "20px monospace";
-    ctx.fillText("Captured from RS", 10, 30);
+    ctx.font = "18px monospace";
+    ctx.fillText("Captured from RS", 10, 28);
 
     statusDiv.innerHTML = `✅ Capture success (${imgData.width}x${imgData.height})`;
   }
