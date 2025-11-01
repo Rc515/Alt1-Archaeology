@@ -39,28 +39,38 @@ function captureAlt1() {
 
   let imgData;
 
-  // If Alt1 provides a toImageData() method, use it (real capture mode)
+  // ✅ Preferred: official Alt1 capture conversion
   if (typeof capture.toImageData === "function") {
-    imgData = capture.toImageData(); // This converts it properly for canvas
+    imgData = capture.toImageData();
     console.log("✅ Used capture.toImageData()");
   } else if (capture instanceof ImageData) {
     imgData = capture;
     console.log("🧩 Using direct ImageData");
   } else {
-    // Fallback for stub or raw buffer data
+    // Fallback for stubs / raw buffer
     const buf = capture.raw || capture.data || capture.img || capture.buf8 || null;
     if (!buf) throw new Error("No image buffer found in capture object.");
-
     console.log("📦 Buffer length:", buf.length, "bytes");
     imgData = new ImageData(new Uint8ClampedArray(buf), capture.width, capture.height);
   }
 
+  // Draw the image
   canvas.width = imgData.width;
   canvas.height = imgData.height;
   ctx.putImageData(imgData, 0, 0);
 
+  // 🟩 Draw a green border + text overlay for debugging
+  ctx.strokeStyle = "lime";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(0, 0, imgData.width, imgData.height);
+
+  ctx.fillStyle = "lime";
+  ctx.font = "20px monospace";
+  ctx.fillText("Captured from RS", 10, 30);
+
   statusDiv.innerHTML = `✅ Capture success (${imgData.width}x${imgData.height})`;
 }
+
 
   // --- Button click ---
   scanBtn.onclick = async () => {
