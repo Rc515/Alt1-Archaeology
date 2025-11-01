@@ -1,8 +1,9 @@
 {
+{
   "appName": "Archaeology Tracker",
   "description": "Tracks damaged archaeology artefacts and XP.",
-  "appUrl": "./index.html",
-  "configUrl": "./appconfig.json",
+  "appUrl": "https://rc515.github.io/Alt1-Archaeology/index.html",
+  "configUrl": "https://rc515.github.io/Alt1-Archaeology/appconfig.json",
   "iconUrl": "./icon.png",
   "defaultWidth": 400,
   "defaultHeight": 300,
