@@ -39,28 +39,20 @@ function captureAlt1() {
 
   let imgData;
 
-  // ✅ If already ImageData, convert its channels
-  if (capture instanceof ImageData) {
+  // If Alt1 provides a toImageData() method, use it (real capture mode)
+  if (typeof capture.toImageData === "function") {
+    imgData = capture.toImageData(); // This converts it properly for canvas
+    console.log("✅ Used capture.toImageData()");
+  } else if (capture instanceof ImageData) {
     imgData = capture;
+    console.log("🧩 Using direct ImageData");
   } else {
-    const buf = capture.raw || capture.data || capture.img || null;
-    if (!buf) throw new Error("No raw image buffer found in capture.");
+    // Fallback for stub or raw buffer data
+    const buf = capture.raw || capture.data || capture.img || capture.buf8 || null;
+    if (!buf) throw new Error("No image buffer found in capture object.");
 
     console.log("📦 Buffer length:", buf.length, "bytes");
-    imgData = new ImageData(
-      new Uint8ClampedArray(buf),
-      capture.width,
-      capture.height
-    );
-  }
-
-  // 🧠 Convert BGRA → RGBA
-  const data = imgData.data;
-  for (let i = 0; i < data.length; i += 4) {
-    const b = data[i];
-    const r = data[i + 2];
-    data[i] = r;
-    data[i + 2] = b;
+    imgData = new ImageData(new Uint8ClampedArray(buf), capture.width, capture.height);
   }
 
   canvas.width = imgData.width;
